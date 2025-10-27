@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esta es mi primer site</title>
+</head>
+<body>
+    <h2>Bienvenidos al sistema de gestión comercial</h2>
+    <br>
+    <h3>Ingrese sus credenciales</h3>
+    <br>
+    <form action="/login" method="post">
+        <label for="usua">Usuario: </label>
+        <input type="text" name="usua" required>
+        <br>
+        <label for="contra">Contraseña: </label>
+        <input type="password" name="contra" required>
+        <br>
+        <button>Ingresar</button>
+        <br><br>
+        <h3>{{msg}}</h3>
+    </form>
+</body>
+</html>
