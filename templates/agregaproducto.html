@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar producto nuevo</title>
+</head>
+<body>
+    <h3>Datos del producto a agregar</h3><br>
+    <form action="/guardaproducto" method="post" enctype="multipart/form-data">
+        <label for="id">Id producto: </label>
+        <input type="text" name="id" required><br>
+        <label for="nom">Nombre: </label>
+        <input type="text" name="nom" required><br>
+        <label for="pre">Precio: </label>
+        <input type="number" name="pre" required><br>
+        <label for="sal">Saldo: </label>
+        <input type="number" name="sal" required><br>
+        <label for="foto">Foto: </label>
+        <input type="file" name="foto"><br><br>
+        <button>Guardar</button>
+    </form>
+</body>
+</html>

@@ -7,6 +7,7 @@
 </head>
 <body>
     <h3>Gestión de productos</h3><br>
+    <a href="/agregaproducto">Agregar un producto nuevo</a><br>
     <table border>
         <thead>
             <th>Id</th>
@@ -14,6 +15,7 @@
             <th>Precio</th>
             <th>Saldo</th>
             <th>Foto</th>
+            <th>Operaciones</th>
         </thead>
         <tbody>
             {% for p in productos %}
@@ -22,7 +24,14 @@
                 <td>{{p[1]}}</td>
                 <td>{{p[2]}}</td>
                 <td>{{p[3]}}</td>
-                <td>{{p[4]}}</td>
+                <td>
+                    <img width="100" height="100" src="/uploads/{{p[4]}}">
+                      
+                </td>
+                <td>
+                    <a href="/modificaproducto/{{p[0]}}">Modificar</a>
+                    <a onclick="return confirm('Seguro elimina este producto?')" href="/borraproducto/{{p[0]}}">Borrar</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
