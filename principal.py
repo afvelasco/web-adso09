@@ -59,6 +59,37 @@ def guardaproducto():
     mi_db.commit()
     return redirect('/productos')
 
+@programa.route("/modificaproducto/<id>")
+def modificaproducto(id):
+    sql = f"SELECT * FROM productos WHERE idproducto='{id}'"
+    mi_cursor.execute(sql)
+    resultado = mi_cursor.fetchall()[0]
+    return render_template("/modificaproducto.html", pro=resultado)
+
+@programa.route("/actualizaproducto", methods=['POST'])
+def actualizaproducto():
+    id = request.form['id']
+    nom = request.form['nom']
+    pre = request.form['pre']
+    sal = request.form['sal']
+    foto = request.files['foto']
+    sql = f"UPDATE productos SET nombre='{nom}', precio={pre}, saldo={sal} WHERE idproducto='{id}'"
+    mi_cursor.execute(sql)
+    mi_db.commit()
+    n,ext =os.path.splitext(foto.filename)
+    if n!="":
+        sql = f"SELECT * FROM productos WHERE idproducto='{id}'"
+        mi_cursor.execute(sql)
+        foto_vieja = mi_cursor.fetchall()[0][4]
+        if foto_vieja != "":
+            os.remove(os.path.join(programa.config['CARPETA_UP'],foto_vieja))
+        foto_nueva = 'P'+id+ext
+        foto.save("uploads/"+foto_nueva)
+        sql = f"UPDATE productos SET foto='{foto_nueva}' WHERE idproducto='{id}'"
+        mi_cursor.execute(sql)
+        mi_db.commit()
+    return redirect("/productos")            
+
 @programa.route("/borraproducto/<id>")
 def borraproducto(id):
     sql = f"UPDATE productos SET inactivo=1 WHERE idproducto='{id}'"
