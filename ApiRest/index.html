@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend Microservicios</title>
+</head>
+<body>
+
+<h1>Catálogo de Productos y Usuarios</h1>
+
+<h2>Productos</h2>
+<div id="productos-list">Cargando productos...</div>
+
+<br>
+
+<form id="datosProducto">
+    <div>
+        <label>Nombre producto:</label>
+        <input type="text" id="nom" required>
+    </div>
+    <br>
+    <div>
+        <label>Precio:</label>
+        <input type="number" id="pre" required>
+    </div>
+    <br>
+    <button type="submit">Agregar</button>
+</form>
+
+<p id="mensaje"></p>
+
+<hr>
+
+<h2>Usuarios</h2>
+<div id="usuarios-list">Cargando usuarios...</div>
+
+<script>
+
+const PRODUCTOS_URL = 'http://10.6.124.83:5080/productos';
+const USUARIOS_URL = 'http://10.6.124.83:5081/usuarios';
+
+async function cargarProductos() {
+    const listaDiv = document.getElementById('productos-list');
+    listaDiv.innerHTML = '';
+
+    try {
+        const response = await fetch(PRODUCTOS_URL);
+        const lista = await response.json();
+
+        if (lista.length === 0) {
+            listaDiv.textContent = "No hay productos disponibles.";
+            return;
+        }
+
+        const ul = document.createElement('ul');
+
+        lista.forEach(p => {
+            const li = document.createElement('li');
+            li.textContent = `[ID: ${p.id}] ${p.nombre} - $${p.precio}`;
+            ul.appendChild(li);
+        });
+
+        listaDiv.appendChild(ul);
+
+    } catch (error) {
+        listaDiv.textContent = "Error al cargar productos. ¿Está corriendo el backend?";
+        console.error(error);
+    }
+}
+
+async function cargarUsuarios() {
+    const listaDiv = document.getElementById('usuarios-list');
+    listaDiv.innerHTML = '';
+
+    try {
+        const response = await fetch(USUARIOS_URL);
+        const lista = await response.json();
+
+        if (lista.length === 0) {
+            listaDiv.textContent = "No hay usuarios disponibles.";
+            return;
+        }
+
+        const ul = document.createElement('ul');
+
+        lista.forEach(u => {
+            const li = document.createElement('li');
+            li.textContent = `${u.nombre} (${u.rol})`;
+            ul.appendChild(li);
+        });
+
+        listaDiv.appendChild(ul);
+
+    } catch (error) {
+        listaDiv.textContent = "Error al cargar usuarios. ¿Está corriendo el backend?";
+        console.error(error);
+    }
+}
+
+document.getElementById('datosProducto').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const nom = document.getElementById('nom').value;
+    const pre = document.getElementById('pre').value;
+
+    const nuevo = {
+        nombre: nom,
+        precio: parseInt(pre)
+    };
+
+    try {
+        const response = await fetch(PRODUCTOS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nuevo)
+        });
+
+        const data = await response.json();
+
+        document.getElementById('mensaje').innerHTML =
+            `Producto agregado con ID: <strong>${data.id}</strong>`;
+
+        cargarProductos();
+        this.reset();
+
+    } catch (error) {
+        document.getElementById('mensaje').textContent =
+            "Error al agregar producto.";
+        console.error(error);
+    }
+});
+
+window.onload = () => {
+    cargarProductos();
+    cargarUsuarios();
+};
+
+</script>
+
+</body>
+</html>

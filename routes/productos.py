@@ -12,7 +12,7 @@ def productos():
 @programa.route("/agregaproducto")
 def agregaproducto():
     if session.get('login') == True:
-        return render_template("agregaproducto.html")
+        return render_template("agregaproducto.html",msg="")
     else:
         return redirect("/")
 
@@ -61,3 +61,14 @@ def borraproducto(id):
         return redirect("/productos")
     else:
         return redirect("/")
+
+@programa.route("/consultaproducto", methods=['POST'])
+def consultaproducto():
+    datos=request.json
+    id = datos['id']
+    resultado = mis_productos.consulta_id(id)
+    if len(resultado)>0:
+        salida = {"valor":1, "msg":"El id ya existe"}
+    else:
+        salida = {"valor":0, "msg":"El id no existe"}
+    return salida

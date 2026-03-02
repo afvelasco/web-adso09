@@ -9,7 +9,8 @@
     <h3>Datos del producto a agregar</h3><br>
     <form action="/guardaproducto" method="post" enctype="multipart/form-data">
         <label for="id">Id producto: </label>
-        <input type="text" name="id" required><br>
+        <input type="text" name="id" id="id" required>
+        <button onclick="valida()">Validar</button><br>
         <label for="nom">Nombre: </label>
         <input type="text" name="nom" required><br>
         <label for="pre">Precio: </label>
@@ -22,5 +23,30 @@
         <br>
         <h2>{{msg}}</h2>
     </form>
+    <script>
+        async function valida() {
+            const id = document.getElementById('id');
+            const jsonEnviar = {id: id};
+            const jsonCargar = JSON.stringify(jsonEnviar);
+            fetch("http://localhost:5000/consultaproducto",
+            {method: 'POST',
+             headers:  {'Content-Type': 'application/json'},
+             body: jsonCargar
+            })
+            .then(response => {
+                if(!response.ok){
+                    throw new Error("Error de comunicación");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Exito",data);
+            })
+            .cath(error => {
+                console.error('Error al enviar datos: ', error);
+            });
+        };
+    </script>
+
 </body>
 </html>
